@@ -33,42 +33,42 @@ function GetSQLValueString($theValue, $theType, $theDefinedValue = "", $theNotDe
 
 $currentPage = $_SERVER["PHP_SELF"];
 
-$maxRows_Recordset1 = 6;
-$pageNum_Recordset1 = 0;
-if (isset($_GET['pageNum_Recordset1'])) {
-  $pageNum_Recordset1 = $_GET['pageNum_Recordset1'];
+$maxRows_product = 6;
+$pageNum_product = 0;
+if (isset($_GET['pageNum_product'])) {
+  $pageNum_product = $_GET['pageNum_product'];
 }
-$startRow_Recordset1 = $pageNum_Recordset1 * $maxRows_Recordset1;
+$startRow_product = $pageNum_product * $maxRows_product;
 
 mysql_select_db($database_product, $product);
-$query_Recordset1 = "SELECT * FROM product ORDER BY p_id ASC";
-$query_limit_Recordset1 = sprintf("%s LIMIT %d, %d", $query_Recordset1, $startRow_Recordset1, $maxRows_Recordset1);
-$Recordset1 = mysql_query($query_limit_Recordset1, $product) or die(mysql_error());
-$row_Recordset1 = mysql_fetch_assoc($Recordset1);
+$query_product = "SELECT * FROM product ORDER BY p_id ASC";
+$query_limit_product = sprintf("%s LIMIT %d, %d", $query_product, $startRow_product, $maxRows_product);
+$product = mysql_query($query_limit_product, $product) or die(mysql_error());
+$row_product = mysql_fetch_assoc($product);
 
-if (isset($_GET['totalRows_Recordset1'])) {
-  $totalRows_Recordset1 = $_GET['totalRows_Recordset1'];
+if (isset($_GET['totalRows_product'])) {
+  $totalRows_product = $_GET['totalRows_product'];
 } else {
-  $all_Recordset1 = mysql_query($query_Recordset1);
-  $totalRows_Recordset1 = mysql_num_rows($all_Recordset1);
+  $all_product = mysql_query($query_product);
+  $totalRows_product = mysql_num_rows($all_product);
 }
-$totalPages_Recordset1 = ceil($totalRows_Recordset1/$maxRows_Recordset1)-1;
+$totalPages_product = ceil($totalRows_product/$maxRows_product)-1;
 
-$queryString_Recordset1 = "";
+$queryString_product = "";
 if (!empty($_SERVER['QUERY_STRING'])) {
   $params = explode("&", $_SERVER['QUERY_STRING']);
   $newParams = array();
   foreach ($params as $param) {
-    if (stristr($param, "pageNum_Recordset1") == false && 
-        stristr($param, "totalRows_Recordset1") == false) {
+    if (stristr($param, "pageNum_product") == false && 
+        stristr($param, "totalRows_product") == false) {
       array_push($newParams, $param);
     }
   }
   if (count($newParams) != 0) {
-    $queryString_Recordset1 = "&" . htmlentities(implode("&", $newParams));
+    $queryString_product = "&" . htmlentities(implode("&", $newParams));
   }
 }
-$queryString_Recordset1 = sprintf("&totalRows_Recordset1=%d%s", $totalRows_Recordset1, $queryString_Recordset1);
+$queryString_product = sprintf("&totalRows_product=%d%s", $totalRows_product, $queryString_product);
 ?>
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml" lang="zh-TW" xml:lang="zh-TW"><!-- InstanceBegin template="/Templates/template.dwt" codeOutsideHTMLIsLocked="false" -->
@@ -195,28 +195,42 @@ function MM_goToURL() { //v3.0
     	<div id="right">
     	  <table width="200" border="0" cellpadding="0" cellspacing="0" id="product_tab">
             <tr>
-              <?php do { ?>
-              <td><p><a href="productdetail.php?p_id=<?php echo $row_Recordset1['p_id']; ?>"><img src="images/dress_img/<?php echo $row_Recordset1['p_id']; ?>.jpg" width="150" height="150" /></a>
-                </p>
-                <p>商品類別：<?php echo $row_Recordset1['p_type']; ?></p>
-                <p>商品名稱：<?php echo $row_Recordset1['p_name']; ?></p>
-                <p></p>
-                <p>商品價格：<?php echo $row_Recordset1['p_price']; ?></p>
-                <p>商品狀態： <?php echo $row_Recordset1['p_state']; ?></p>
-              <h4>訂購商品</a></h4></td>
-              <?php $col++;if($col%3==0){echo "</tr><tr>";}?>
-                <?php } while ($row_Recordset1 = mysql_fetch_assoc($Recordset1)); ?>
+              <?php $col = 0;?>
+			  <?php do { ?>
+              <td><p><a href="javascript:;" onclick="MM_goToURL('parent','productdetail.php?p_id=<?php echo $row_product['p_id']; ?>');return document.MM_returnValue"><img src="images/dress_img/<?php echo $row_product['p_id']; ?>.jpg" name="product_img" width="170" height="170" border="0" id="product_img" /></a></p>
+                <p>商品類別：<?php echo $row_product['p_type']; ?></p>
+                <p>商品名稱：<?php echo $row_product['p_name']; ?></p>
+                <p><?php echo $row_product['p_display']; ?></p>
+                <p>商品價格：<?php echo $row_product['p_price']; ?></p>
+                <p>商品狀態：
+                <?php echo $row_product['p_state']; ?></p>
+                <h4><a href="shopping.php?p_id=<?php echo $row_product['p_id']; ?>&amp;add=additem">訂購商品</a></h4></td>
+                <?php $col++;if($col%3==0){echo "</tr><tr>";}?>
+				<?php } while ($row_product = mysql_fetch_assoc($product)); ?>
             </tr>
           </table>
     	  <table width="650" border="0" cellpadding="0" cellspacing="0" id="count_tab">
     	    <tr>
-    	      <td><a href="<?php printf("%s?pageNum_Recordset1=%d%s", $currentPage, 0, $queryString_Recordset1); ?>">第一頁</a></td>
     	      <td>&nbsp;
-                <a href="<?php printf("%s?pageNum_Recordset1=%d%s", $currentPage, max(0, $pageNum_Recordset1 - 1), $queryString_Recordset1); ?>">上一頁</a>
-                <h4>&nbsp;</h4></td>
-    	      <td><a href="<?php printf("%s?pageNum_Recordset1=%d%s", $currentPage, min($totalPages_Recordset1, $pageNum_Recordset1 + 1), $queryString_Recordset1); ?>">下一頁</a></td>
-    	      <td><a href="<?php printf("%s?pageNum_Recordset1=%d%s", $currentPage, $totalPages_Recordset1, $queryString_Recordset1); ?>">最後一頁</a></td>
-  	        </tr>
+                <table border="0">
+                  <tr>
+                    <td><?php if ($pageNum_product > 0) { // Show if not first page ?>
+                        <a href="<?php printf("%s?pageNum_product=%d%s", $currentPage, 0, $queryString_product); ?>">第一頁</a>
+                        <?php } // Show if not first page ?></td>
+                    <td><?php if ($pageNum_product > 0) { // Show if not first page ?>
+                        <a href="<?php printf("%s?pageNum_product=%d%s", $currentPage, max(0, $pageNum_product - 1), $queryString_product); ?>">上一頁</a>
+                        <?php } // Show if not first page ?></td>
+                    <td><?php if ($pageNum_product < $totalPages_product) { // Show if not last page ?>
+                        <a href="<?php printf("%s?pageNum_product=%d%s", $currentPage, min($totalPages_product, $pageNum_product + 1), $queryString_product); ?>">下一頁</a>
+                        <?php } // Show if not last page ?></td>
+                    <td><?php if ($pageNum_product < $totalPages_product) { // Show if not last page ?>
+                        <a href="<?php printf("%s?pageNum_product=%d%s", $currentPage, $totalPages_product, $queryString_product); ?>">最後一頁</a>
+                        <?php } // Show if not last page ?></td>
+                  </tr>
+              </table></td>
+    	      <td>&nbsp;
+                <h4>記錄 <?php echo ($startRow_product + 1) ?> 到 <?php echo min($startRow_product + $maxRows_product, $totalRows_product) ?> 共 <?php echo $totalRows_product ?></h4></td>
+  	      </tr>
   	    </table>
     	  <p>&nbsp;</p>
         </div>
@@ -240,5 +254,5 @@ function MM_goToURL() { //v3.0
 </body>
 <!-- InstanceEnd --></html>
 <?php
-mysql_free_result($Recordset1);
+mysql_free_result($product);
 ?>
