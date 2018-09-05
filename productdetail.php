@@ -1,3 +1,46 @@
+<?php require_once('Connections/product.php'); ?>
+<?php
+if (!function_exists("GetSQLValueString")) {
+function GetSQLValueString($theValue, $theType, $theDefinedValue = "", $theNotDefinedValue = "") 
+{
+  if (PHP_VERSION < 6) {
+    $theValue = get_magic_quotes_gpc() ? stripslashes($theValue) : $theValue;
+  }
+
+  $theValue = function_exists("mysql_real_escape_string") ? mysql_real_escape_string($theValue) : mysql_escape_string($theValue);
+
+  switch ($theType) {
+    case "text":
+      $theValue = ($theValue != "") ? "'" . $theValue . "'" : "NULL";
+      break;    
+    case "long":
+    case "int":
+      $theValue = ($theValue != "") ? intval($theValue) : "NULL";
+      break;
+    case "double":
+      $theValue = ($theValue != "") ? doubleval($theValue) : "NULL";
+      break;
+    case "date":
+      $theValue = ($theValue != "") ? "'" . $theValue . "'" : "NULL";
+      break;
+    case "defined":
+      $theValue = ($theValue != "") ? $theDefinedValue : $theNotDefinedValue;
+      break;
+  }
+  return $theValue;
+}
+}
+
+$colname_productdetail = "-1";
+if (isset($_GET['p_id'])) {
+  $colname_productdetail = $_GET['p_id'];
+}
+mysql_select_db($database_product, $product);
+$query_productdetail = sprintf("SELECT * FROM product WHERE p_id = %s", GetSQLValueString($colname_productdetail, "int"));
+$productdetail = mysql_query($query_productdetail, $product) or die(mysql_error());
+$row_productdetail = mysql_fetch_assoc($productdetail);
+$totalRows_productdetail = mysql_num_rows($productdetail);
+?>
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml" lang="zh-TW" xml:lang="zh-TW"><!-- InstanceBegin template="/Templates/template.dwt" codeOutsideHTMLIsLocked="false" -->
 <head>
@@ -104,15 +147,15 @@
     	<div id="right">
           <table width="500" border="0" cellpadding="0" cellspacing="0" id="detail_tab">
             <tr>
-              <td><h6>&nbsp;</h6></td>
+              <td><h6><img src="images/dress_img/<?php echo $row_productdetail['p_id']; ?>.jpg" width="270" height="270" /></h6></td>
             </tr>
             <tr>
-              <td><p>商品類別：</p>
-                <p>商品名稱：</p>
+              <td><p>商品類別：<?php echo $row_productdetail['p_type']; ?></p>
+                <p>商品名稱：<?php echo $row_productdetail['p_name']; ?></p>
                 <p></p>
-                <p>商品價格：</p>
-                <p>商品狀態：</p>
-                <h5>訂購商品</a></h5></td>
+                <p>商品價格：<?php echo $row_productdetail['p_price']; ?></p>
+                <p>商品狀態：<?php echo $row_productdetail['p_state']; ?></p>
+              <h5>訂購商品</a></h5></td>
             </tr>
           </table>
     	</div>

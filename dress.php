@@ -1,3 +1,75 @@
+<?php require_once('Connections/product.php'); ?>
+<?php
+if (!function_exists("GetSQLValueString")) {
+function GetSQLValueString($theValue, $theType, $theDefinedValue = "", $theNotDefinedValue = "") 
+{
+  if (PHP_VERSION < 6) {
+    $theValue = get_magic_quotes_gpc() ? stripslashes($theValue) : $theValue;
+  }
+
+  $theValue = function_exists("mysql_real_escape_string") ? mysql_real_escape_string($theValue) : mysql_escape_string($theValue);
+
+  switch ($theType) {
+    case "text":
+      $theValue = ($theValue != "") ? "'" . $theValue . "'" : "NULL";
+      break;    
+    case "long":
+    case "int":
+      $theValue = ($theValue != "") ? intval($theValue) : "NULL";
+      break;
+    case "double":
+      $theValue = ($theValue != "") ? doubleval($theValue) : "NULL";
+      break;
+    case "date":
+      $theValue = ($theValue != "") ? "'" . $theValue . "'" : "NULL";
+      break;
+    case "defined":
+      $theValue = ($theValue != "") ? $theDefinedValue : $theNotDefinedValue;
+      break;
+  }
+  return $theValue;
+}
+}
+
+$currentPage = $_SERVER["PHP_SELF"];
+
+$maxRows_Recordset1 = 6;
+$pageNum_Recordset1 = 0;
+if (isset($_GET['pageNum_Recordset1'])) {
+  $pageNum_Recordset1 = $_GET['pageNum_Recordset1'];
+}
+$startRow_Recordset1 = $pageNum_Recordset1 * $maxRows_Recordset1;
+
+mysql_select_db($database_product, $product);
+$query_Recordset1 = "SELECT * FROM product ORDER BY p_id ASC";
+$query_limit_Recordset1 = sprintf("%s LIMIT %d, %d", $query_Recordset1, $startRow_Recordset1, $maxRows_Recordset1);
+$Recordset1 = mysql_query($query_limit_Recordset1, $product) or die(mysql_error());
+$row_Recordset1 = mysql_fetch_assoc($Recordset1);
+
+if (isset($_GET['totalRows_Recordset1'])) {
+  $totalRows_Recordset1 = $_GET['totalRows_Recordset1'];
+} else {
+  $all_Recordset1 = mysql_query($query_Recordset1);
+  $totalRows_Recordset1 = mysql_num_rows($all_Recordset1);
+}
+$totalPages_Recordset1 = ceil($totalRows_Recordset1/$maxRows_Recordset1)-1;
+
+$queryString_Recordset1 = "";
+if (!empty($_SERVER['QUERY_STRING'])) {
+  $params = explode("&", $_SERVER['QUERY_STRING']);
+  $newParams = array();
+  foreach ($params as $param) {
+    if (stristr($param, "pageNum_Recordset1") == false && 
+        stristr($param, "totalRows_Recordset1") == false) {
+      array_push($newParams, $param);
+    }
+  }
+  if (count($newParams) != 0) {
+    $queryString_Recordset1 = "&" . htmlentities(implode("&", $newParams));
+  }
+}
+$queryString_Recordset1 = sprintf("&totalRows_Recordset1=%d%s", $totalRows_Recordset1, $queryString_Recordset1);
+?>
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml" lang="zh-TW" xml:lang="zh-TW"><!-- InstanceBegin template="/Templates/template.dwt" codeOutsideHTMLIsLocked="false" -->
 <head>
@@ -123,21 +195,28 @@ function MM_goToURL() { //v3.0
     	<div id="right">
     	  <table width="200" border="0" cellpadding="0" cellspacing="0" id="product_tab">
             <tr>
-              <td><p>&nbsp;</p>
-                <p>商品類別：</p>
-                <p>商品名稱：</p>
+              <?php do { ?>
+              <td><p><a href="productdetail.php?p_id=<?php echo $row_Recordset1['p_id']; ?>"><img src="images/dress_img/<?php echo $row_Recordset1['p_id']; ?>.jpg" width="150" height="150" /></a>
+                </p>
+                <p>商品類別：<?php echo $row_Recordset1['p_type']; ?></p>
+                <p>商品名稱：<?php echo $row_Recordset1['p_name']; ?></p>
                 <p></p>
-                <p>商品價格：</p>
-                <p>商品狀態： </p>
-                <h4>訂購商品</a></h4></td>
+                <p>商品價格：<?php echo $row_Recordset1['p_price']; ?></p>
+                <p>商品狀態： <?php echo $row_Recordset1['p_state']; ?></p>
+              <h4>訂購商品</a></h4></td>
+              <?php $col++;if($col%3==0){echo "</tr><tr>";}?>
+                <?php } while ($row_Recordset1 = mysql_fetch_assoc($Recordset1)); ?>
             </tr>
           </table>
     	  <table width="650" border="0" cellpadding="0" cellspacing="0" id="count_tab">
     	    <tr>
-    	      <td>&nbsp;</td>
+    	      <td><a href="<?php printf("%s?pageNum_Recordset1=%d%s", $currentPage, 0, $queryString_Recordset1); ?>">第一頁</a></td>
     	      <td>&nbsp;
+                <a href="<?php printf("%s?pageNum_Recordset1=%d%s", $currentPage, max(0, $pageNum_Recordset1 - 1), $queryString_Recordset1); ?>">上一頁</a>
                 <h4>&nbsp;</h4></td>
-  	      </tr>
+    	      <td><a href="<?php printf("%s?pageNum_Recordset1=%d%s", $currentPage, min($totalPages_Recordset1, $pageNum_Recordset1 + 1), $queryString_Recordset1); ?>">下一頁</a></td>
+    	      <td><a href="<?php printf("%s?pageNum_Recordset1=%d%s", $currentPage, $totalPages_Recordset1, $queryString_Recordset1); ?>">最後一頁</a></td>
+  	        </tr>
   	    </table>
     	  <p>&nbsp;</p>
         </div>
@@ -160,3 +239,6 @@ function MM_goToURL() { //v3.0
 </map>
 </body>
 <!-- InstanceEnd --></html>
+<?php
+mysql_free_result($Recordset1);
+?>
