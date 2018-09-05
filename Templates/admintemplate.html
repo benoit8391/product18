@@ -1,0 +1,253 @@
+<?php require_once('Connections/mydate.php'); ?>
+<?php
+//initialize the session
+if (!isset($_SESSION)) {
+  session_start();
+}
+
+// ** Logout the current user. **
+$logoutAction = $_SERVER['PHP_SELF']."?doLogout=true";
+if ((isset($_SERVER['QUERY_STRING'])) && ($_SERVER['QUERY_STRING'] != "")){
+  $logoutAction .="&". htmlentities($_SERVER['QUERY_STRING']);
+}
+
+if ((isset($_GET['doLogout'])) &&($_GET['doLogout']=="true")){
+  //to fully log out a visitor we need to clear the session varialbles
+  $_SESSION['MM_Username'] = NULL;
+  $_SESSION['MM_UserGroup'] = NULL;
+  $_SESSION['PrevUrl'] = NULL;
+  unset($_SESSION['MM_Username']);
+  unset($_SESSION['MM_UserGroup']);
+  unset($_SESSION['PrevUrl']);
+	
+  $logoutGoTo = "index.php";
+  if ($logoutGoTo) {
+    header("Location: $logoutGoTo");
+    exit;
+  }
+}
+?>
+<?php
+if (!isset($_SESSION)) {
+  session_start();
+}
+$MM_authorizedUsers = "";
+$MM_donotCheckaccess = "true";
+
+// *** Restrict Access To Page: Grant or deny access to this page
+function isAuthorized($strUsers, $strGroups, $UserName, $UserGroup) { 
+  // For security, start by assuming the visitor is NOT authorized. 
+  $isValid = False; 
+
+  // When a visitor has logged into this site, the Session variable MM_Username set equal to their username. 
+  // Therefore, we know that a user is NOT logged in if that Session variable is blank. 
+  if (!empty($UserName)) { 
+    // Besides being logged in, you may restrict access to only certain users based on an ID established when they login. 
+    // Parse the strings into arrays. 
+    $arrUsers = Explode(",", $strUsers); 
+    $arrGroups = Explode(",", $strGroups); 
+    if (in_array($UserName, $arrUsers)) { 
+      $isValid = true; 
+    } 
+    // Or, you may restrict access to only certain users based on their username. 
+    if (in_array($UserGroup, $arrGroups)) { 
+      $isValid = true; 
+    } 
+    if (($strUsers == "") && true) { 
+      $isValid = true; 
+    } 
+  } 
+  return $isValid; 
+}
+
+$MM_restrictGoTo = "adminindex.php";
+if (!((isset($_SESSION['MM_Username'])) && (isAuthorized("",$MM_authorizedUsers, $_SESSION['MM_Username'], $_SESSION['MM_UserGroup'])))) {   
+  $MM_qsChar = "?";
+  $MM_referrer = $_SERVER['PHP_SELF'];
+  if (strpos($MM_restrictGoTo, "?")) $MM_qsChar = "&";
+  if (isset($_SERVER['QUERY_STRING']) && strlen($_SERVER['QUERY_STRING']) > 0) 
+  $MM_referrer .= "?" . $_SERVER['QUERY_STRING'];
+  $MM_restrictGoTo = $MM_restrictGoTo. $MM_qsChar . "accesscheck=" . urlencode($MM_referrer);
+  header("Location: ". $MM_restrictGoTo); 
+  exit;
+}
+?>
+<?php
+if (!function_exists("GetSQLValueString")) {
+function GetSQLValueString($theValue, $theType, $theDefinedValue = "", $theNotDefinedValue = "") 
+{
+  if (PHP_VERSION < 6) {
+    $theValue = get_magic_quotes_gpc() ? stripslashes($theValue) : $theValue;
+  }
+
+  $theValue = function_exists("mysql_real_escape_string") ? mysql_real_escape_string($theValue) : mysql_escape_string($theValue);
+
+  switch ($theType) {
+    case "text":
+      $theValue = ($theValue != "") ? "'" . $theValue . "'" : "NULL";
+      break;    
+    case "long":
+    case "int":
+      $theValue = ($theValue != "") ? intval($theValue) : "NULL";
+      break;
+    case "double":
+      $theValue = ($theValue != "") ? doubleval($theValue) : "NULL";
+      break;
+    case "date":
+      $theValue = ($theValue != "") ? "'" . $theValue . "'" : "NULL";
+      break;
+    case "defined":
+      $theValue = ($theValue != "") ? $theDefinedValue : $theNotDefinedValue;
+      break;
+  }
+  return $theValue;
+}
+}
+
+$currentPage = $_SERVER["PHP_SELF"];
+
+$maxRows_newsadmin = 10;
+$pageNum_newsadmin = 0;
+if (isset($_GET['pageNum_newsadmin'])) {
+  $pageNum_newsadmin = $_GET['pageNum_newsadmin'];
+}
+$startRow_newsadmin = $pageNum_newsadmin * $maxRows_newsadmin;
+
+mysql_select_db($database_mydate, $mydate);
+$query_newsadmin = "SELECT * FROM newsdate ORDER BY n_date DESC";
+$query_limit_newsadmin = sprintf("%s LIMIT %d, %d", $query_newsadmin, $startRow_newsadmin, $maxRows_newsadmin);
+$newsadmin = mysql_query($query_limit_newsadmin, $mydate) or die(mysql_error());
+$row_newsadmin = mysql_fetch_assoc($newsadmin);
+
+if (isset($_GET['totalRows_newsadmin'])) {
+  $totalRows_newsadmin = $_GET['totalRows_newsadmin'];
+} else {
+  $all_newsadmin = mysql_query($query_newsadmin);
+  $totalRows_newsadmin = mysql_num_rows($all_newsadmin);
+}
+$totalPages_newsadmin = ceil($totalRows_newsadmin/$maxRows_newsadmin)-1;
+
+$queryString_newsadmin = "";
+if (!empty($_SERVER['QUERY_STRING'])) {
+  $params = explode("&", $_SERVER['QUERY_STRING']);
+  $newParams = array();
+  foreach ($params as $param) {
+    if (stristr($param, "pageNum_newsadmin") == false && 
+        stristr($param, "totalRows_newsadmin") == false) {
+      array_push($newParams, $param);
+    }
+  }
+  if (count($newParams) != 0) {
+    $queryString_newsadmin = "&" . htmlentities(implode("&", $newParams));
+  }
+}
+$queryString_newsadmin = sprintf("&totalRows_newsadmin=%d%s", $totalRows_newsadmin, $queryString_newsadmin);
+?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>芙兒後台管理系統-最新消息管理面</title>
+<style type="text/css">
+body {
+	background-color: #CB99CC;
+	margin: 0px;
+	padding: 0px;
+	background-image: url(../images/admin_img/bg.jpg);
+	background-repeat: repeat-x;
+}
+#wrapper {
+	background-image: url(../images/bg.jpg);
+	background-repeat: repeat-x;
+	width: 100%;
+	float: left;
+}
+#wrapper #main #news_form #newslist_table tr td p a #add_img {
+	border-top-style: none;
+	border-right-style: none;
+	border-bottom-style: none;
+	border-left-style: none;
+}
+#wrapper #main #news_form #newslist_table tr td p a #out_img {
+	border-top-style: none;
+	border-right-style: none;
+	border-bottom-style: none;
+	border-left-style: none;
+}
+#wrapper #main {
+	background-image: url(../images/admin_img/adminindex.jpg);
+	background-repeat: no-repeat;
+	width: 800px;
+	float: left;
+}
+#wrapper #main #news_form #newslist_table tr td h4 {
+	font-family: "新細明體", "Times New Roman";
+	font-size: 1.2em;
+	margin-top: 10px;
+	margin-bottom: 10px;
+	text-align: center;
+	font-weight: bold;
+	color: #606;
+}
+#wrapper #main #news_form {
+	margin-top: 150px;
+}
+#wrapper #main #news_form #newslist_table {
+	border-top-width: 3px;
+	border-right-width: 3px;
+	border-bottom-width: 1px;
+	border-left-width: 1px;
+	border-top-style: none;
+	border-right-style: none;
+	border-bottom-style: solid;
+	border-left-style: solid;
+	border-top-color: #909;
+	border-right-color: #909;
+	border-bottom-color: #909;
+	border-left-color: #909;
+	margin-left: 10px;
+}
+#wrapper #main #news_form #newslist_table tr td p {
+	font-family: "新細明體", "Times New Roman";
+	font-size: 0.9em;
+	font-weight: bold;
+	color: #606;
+	text-align: center;
+	margin-top: 5px;
+	margin-bottom: 5px;
+}
+#wrapper #main #news_form #newslist_table tr td {
+	border-top-width: 1px;
+	border-right-width: 1px;
+	border-bottom-width: 1px;
+	border-left-width: 1px;
+	border-top-style: solid;
+	border-right-style: solid;
+	border-bottom-style: none;
+	border-left-style: none;
+	border-top-color: #909;
+	border-right-color: #909;
+	border-bottom-color: #909;
+	border-left-color: #909;
+}
+#wrapper #main #loginform {
+	margin-top: 150px;
+}
+#wrapper #main #loginform #logintable {
+	margin-right: auto;
+	margin-left: auto;
+}
+</style>
+</head>
+
+<body>
+<div id="wrapper">
+	<div id="main"><form action="" method="get" id="news_form">
+	  <br />
+  </form></div>
+</div>
+</body>
+</html>
+<?php
+mysql_free_result($newsadmin);
+?>

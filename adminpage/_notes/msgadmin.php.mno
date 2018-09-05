@@ -1,0 +1,5 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<info>
+	<infoitem key="UD_msgdate" value="name:ms_id;datatype:int,name:ms_title;datatype:string,name:ms_name;datatype:string,name:ms_date;datatype:datetime,name:ms_content;datatype:string" />
+	<infoitem key="UD_msgadmin" value="name:ms_id;datatype:int,name:ms_title;datatype:string,name:ms_name;datatype:string,name:ms_date;datatype:datetime,name:ms_content;datatype:string" />
+</info>

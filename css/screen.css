@@ -1,0 +1,128 @@
+@charset "utf-8";
+/* CSS Document */
+<style type="text/css">
+p ,h1,h2,h3,h4,h5,h6,ol,ul,li,table,th,td,tr{
+	margin: 0px;
+	padding: 0px;
+}
+
+body {
+	font-family: "新細明體", "Times New Roman";
+	font-size: 100%;
+	margin: 0px;
+	padding: 0px;
+	background-image: url(../images/template_img/bg.png);
+	background-repeat: repeat;
+	background-color: #FFBBE9;
+}
+p ,h1,h2,h3,h4,h5,h6,ul,ol,li,table,tr,td,th{
+	margin: 0px;
+	padding: 0px;
+}
+
+#wrapper {
+	width: 900px;
+	margin-right: auto;
+	margin-left: auto;
+}
+#wrapper #header {
+	background-image: url(../images/template_img/template_01.jpg);
+	background-repeat: no-repeat;
+	height: 100px;
+	width: 900px;
+}
+#wrapper #header #icon_table tr td p a {
+	font-family: "新細明體", "Times New Roman";
+	font-size: 0.8em;
+	color: #912B91;
+	text-decoration: none;
+}
+#wrapper #header #icon_table {
+	float: right;
+	margin-right: 120px;
+}
+#wrapper #header #icon_table tr td a img {
+	border-top-style: none;
+	border-right-style: none;
+	border-bottom-style: none;
+	border-left-style: none;
+}
+#wrapper #navigation table tr td p {
+	font-family: "新細明體", "Times New Roman";
+	font-size: 0.8em;
+	text-align: center;
+	color: #670167;
+}
+
+#wrapper #navigation {
+	background-image: url(../images/template_img/template_02.jpg);
+	background-repeat: no-repeat;
+	height: 30px;
+	width: 900px;
+	margin: 0px;
+}
+#wrapper #navigation table tr td a img {
+	border-top-style: none;
+	border-right-style: none;
+	border-bottom-style: none;
+	border-left-style: none;
+}
+#wrapper #navigation table tr td p a {
+	text-decoration: none;
+	color: #FFF;
+}
+
+#wrapper #content {
+	width: 900px;
+}
+#wrapper #content #left {
+	background-color: #FFF;
+	width: 225px;
+	float: left;
+}
+#wrapper #content #right {
+	background-image: url(../images/template_img/template_04.jpg);
+	background-repeat: repeat-y;
+	float: left;
+	width: 675px;
+	height: 815px;
+}
+#wrapper #footer {
+	background-image: url(../images/template_img/template_05.jpg);
+	background-repeat: no-repeat;
+	height: 30px;
+	width: 900px;
+	float: left;
+	margin: 0px;
+	padding: 0px;
+}
+</style>
+#wrapper #navigation table p   {
+	font-family: "新細明體", "Times New Roman";
+	font-size: 0.8em;
+	color: #650065;
+	text-align: center;
+	margin: 0px;
+}
+#wrapper #footer #footer_text {
+	margin-top: 10px;
+	margin-right: 0px;
+	margin-bottom: 0px;
+	margin-left: 0px;
+}
+#wrapper #footer #footer_text tr td p {
+	font-family: "新細明體", "Times New Roman";
+	font-size: 0.9em;
+	color: #FFF;
+}
+#wrapper #footer #footer_text tr td p a {
+	text-decoration: none;
+	color: #FECCFF;
+}
+
+
+#wrapper #footer #footer_text tr td h5 {
+	font-family: "新細明體", "Times New Roman";
+	color: #FFF;
+	text-align: right;
+}
