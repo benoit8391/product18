@@ -145,22 +145,20 @@ $totalRows_productdetail = mysql_num_rows($productdetail);
     </div>
     	<!-- InstanceBeginEditable name="contentright" -->
     	<div id="right">
-          <?php if ($totalRows_productdetail > 0) { // Show if recordset not empty ?>
-  <table width="500" border="0" cellpadding="0" cellspacing="0" id="detail_tab">
-    <tr>
-      <td><h6><img src="images/dress_img/<?php echo $row_productdetail['p_id']; ?>.jpg" width="270" height="270" /></h6></td>
-      </tr>
-    <tr>
-      <td><p>商品類別：<?php echo $row_productdetail['p_type']; ?></p>
-        <p>商品名稱：<?php echo $row_productdetail['p_name']; ?></p>
-        <p><?php echo $row_productdetail['p_display']; ?></p>
-        <p>商品價格：<?php echo $row_productdetail['p_price']; ?></p>
-        <p>商品狀態：<?php echo $row_productdetail['p_state']; ?></p>
-        <h5><a href="shopping.php?p_id=<?php echo $row_productdetail['p_id']; ?>&amp;add=additem">訂購商品</a></h5></td>
-      </tr>
-  </table>
-  <?php } // Show if recordset not empty ?>
-        </div>
+          <table width="500" border="0" cellpadding="0" cellspacing="0" id="detail_tab">
+            <tr>
+              <td><h6><img src="images/dress_img/<?php echo $row_productdetail['p_id']; ?>.jpg" width="270" height="270" /></h6></td>
+            </tr>
+            <tr>
+              <td><p>商品類別：<?php echo $row_productdetail['p_type']; ?></p>
+                <p>商品名稱：<?php echo $row_productdetail['p_name']; ?></p>
+                <p></p>
+                <p>商品價格：<?php echo $row_productdetail['p_price']; ?></p>
+                <p>商品狀態：<?php echo $row_productdetail['p_state']; ?></p>
+              <h5>訂購商品</a></h5></td>
+            </tr>
+          </table>
+    	</div>
     	
     <!-- InstanceEndEditable --></div>
     <div id="footer">

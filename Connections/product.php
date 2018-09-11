@@ -8,6 +8,5 @@ $username_product = "admin";
 $password_product = "a123";
 $product = mysql_pconnect($hostname_product, $username_product, $password_product) or trigger_error(mysql_error(),E_USER_ERROR); 
 mysql_query("set names utf8");
-
-error_reporting(0);//將過度提示關閉
+error_reporting(0);
 ?>
