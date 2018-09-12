@@ -3,7 +3,7 @@
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
 <!-- InstanceBeginEditable name="doctitle" -->
-<title>芙兒後台管理系統-商品上傳頁面</title>
+<title>芙兒後台管理系統-最新消息管理面</title>
 <!-- InstanceEndEditable -->
 <style type="text/css">p ,h1,h2,h3,h4,h5,h6,ol,ul,li,table,th,td,tr,img{
 	margin: 0px;
@@ -104,79 +104,14 @@ body {
 }
 </style>
 <!-- InstanceBeginEditable name="head" -->
-<style type="text/css">
-#wrapper #main #form1 {
-	width: 650px;
-	margin-right: 20px;
-	margin-left: 20px;
-	margin-top: 150px;
-}
-#wrapper #main #form1 table h3 {
-	font-family: "新細明體", "Times New Roman";
-	font-size: 1em;
-	color: #67006B;
-	margin: 10px;
-	text-align: center;
-}
-#wrapper #main #form1 table h4 {
-	font-family: "新細明體", "Times New Roman";
-	font-size: 0.9em;
-	color: #936;
-	text-align: right;
-	margin: 5px;
-}
-</style>
 <!-- InstanceEndEditable -->
 </head>
 
 <body>
 <div id="wrapper"><!-- InstanceBeginEditable name="main" -->
   <div id="main"> 
-    <form action="updatedone.php" method="POST" enctype="multipart/form-data" name="form1" id="form1">
-      <table width="500" border="0" cellspacing="0" cellpadding="0">
-        <tr>
-          <td colspan="2"><h3>商品新增頁面</h3></td>
-        </tr>
-        <tr>
-          <td width="139"><h4>商品編號：</h4></td>
-          <td width="361">&nbsp;</td>
-        </tr>
-        <tr>
-          <td><h4>商品類別：</h4></td>
-          <td><select name="p_type" id="p_type">
-            <option value="小洋裝">小洋裝</option>
-            <option value="長洋裝">長洋裝</option>
-            <option value="小禮服">小禮服</option>
-          </select></td>
-        </tr>
-        <tr>
-          <td><h4>商品名稱：</h4></td>
-          <td><input type="text" name="p_name" id="p_name" /></td>
-        </tr>
-        <tr>
-          <td><h4>商品介紹：</h4></td>
-          <td><textarea name="p_display" id="p_display" cols="45" rows="5"></textarea></td>
-        </tr>
-        <tr>
-          <td><h4>單價：</h4></td>
-          <td><input type="text" name="p_price" id="p_price" /></td>
-        </tr>
-        <tr>
-          <td><h4>商品圖片：</h4></td>
-          <td><input type="file" name="upload" id="upload" /></td>
-        </tr>
-        <tr>
-          <td><h4>商品狀態：</h4></td>
-          <td><select name="p_state" id="p_state">
-            <option value="可訂購">可訂購</option>
-            <option value="缺貨中">缺貨中</option>
-          </select></td>
-        </tr>
-        <tr>
-          <td colspan="2" align="center"><input type="submit" name="update" id="update" value="商品上傳" /></td>
-        </tr>
-      </table>
-    </form>
+  123
+     
   </div>
 <!-- InstanceEndEditable --></div>
 </body>

@@ -193,29 +193,43 @@ function MM_goToURL() { //v3.0
     </div>
     	<!-- InstanceBeginEditable name="contentright" -->
     	<div id="right">
-    	  <table width="214" border="0" cellpadding="0" cellspacing="0" id="product_tab">
+    	  <table width="200" border="0" cellpadding="0" cellspacing="0" id="product_tab">
             <tr>
-             <?php do { ?>
-             <td width="214">
-                <p><a href="productdetail.php?p_id=<?php echo $row_product['p_id']; ?>"><img src="images/dress_img/<?php echo $row_product['p_id']; ?>.jpg" width="160" height="160" /></a></p>
+              <?php $col = 0;?>
+			  <?php do { ?>
+              <td><p><a href="javascript:;" onclick="MM_goToURL('parent','productdetail.php?p_id=<?php echo $row_product['p_id']; ?>');return document.MM_returnValue"><img src="images/dress_img/<?php echo $row_product['p_id']; ?>.jpg" name="product_img" width="170" height="170" border="0" id="product_img" /></a></p>
                 <p>商品類別：<?php echo $row_product['p_type']; ?></p>
                 <p>商品名稱：<?php echo $row_product['p_name']; ?></p>
-                <p></p>
+                <p><?php echo $row_product['p_display']; ?></p>
                 <p>商品價格：<?php echo $row_product['p_price']; ?></p>
-                <p>商品狀態：<?php echo $row_product['p_state']; ?></p>
-                <h4>訂購商品</a></h4>
-             </td>
-				<?php $col++;if($col%3==0){echo "</tr><tr>";}?>
-                <?php } while ($row_product = mysql_fetch_assoc($product)); ?>
+                <p>商品狀態：
+                <?php echo $row_product['p_state']; ?></p>
+                <h4><a href="shopping.php?p_id=<?php echo $row_product['p_id']; ?>&amp;add=additem">訂購商品</a></h4></td>
+                <?php $col++;if($col%3==0){echo "</tr><tr>";}?>
+				<?php } while ($row_product = mysql_fetch_assoc($product)); ?>
             </tr>
           </table>
-    	  
-    	  <table width="90%" border="1" cellspacing="0" cellpadding="0">
+    	  <table width="650" border="0" cellpadding="0" cellspacing="0" id="count_tab">
     	    <tr>
-    	      <td><a href="<?php printf("%s?pageNum_product=%d%s", $currentPage, 0, $queryString_product); ?>">第一頁</a></td>
-    	      <td><a href="<?php printf("%s?pageNum_product=%d%s", $currentPage, max(0, $pageNum_product - 1), $queryString_product); ?>">上一頁</a></td>
-    	      <td><a href="<?php printf("%s?pageNum_product=%d%s", $currentPage, min($totalPages_product, $pageNum_product + 1), $queryString_product); ?>">下一頁</a></td>
-    	      <td><a href="<?php printf("%s?pageNum_product=%d%s", $currentPage, $totalPages_product, $queryString_product); ?>">最後一頁</a></td>
+    	      <td>&nbsp;
+                <table border="0">
+                  <tr>
+                    <td><?php if ($pageNum_product > 0) { // Show if not first page ?>
+                        <a href="<?php printf("%s?pageNum_product=%d%s", $currentPage, 0, $queryString_product); ?>">第一頁</a>
+                        <?php } // Show if not first page ?></td>
+                    <td><?php if ($pageNum_product > 0) { // Show if not first page ?>
+                        <a href="<?php printf("%s?pageNum_product=%d%s", $currentPage, max(0, $pageNum_product - 1), $queryString_product); ?>">上一頁</a>
+                        <?php } // Show if not first page ?></td>
+                    <td><?php if ($pageNum_product < $totalPages_product) { // Show if not last page ?>
+                        <a href="<?php printf("%s?pageNum_product=%d%s", $currentPage, min($totalPages_product, $pageNum_product + 1), $queryString_product); ?>">下一頁</a>
+                        <?php } // Show if not last page ?></td>
+                    <td><?php if ($pageNum_product < $totalPages_product) { // Show if not last page ?>
+                        <a href="<?php printf("%s?pageNum_product=%d%s", $currentPage, $totalPages_product, $queryString_product); ?>">最後一頁</a>
+                        <?php } // Show if not last page ?></td>
+                  </tr>
+              </table></td>
+    	      <td>&nbsp;
+                <h4>記錄 <?php echo ($startRow_product + 1) ?> 到 <?php echo min($startRow_product + $maxRows_product, $totalRows_product) ?> 共 <?php echo $totalRows_product ?></h4></td>
   	      </tr>
   	    </table>
     	  <p>&nbsp;</p>
